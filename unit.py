@@ -19,14 +19,21 @@ def load_image(name, colorkey=None):
 
 class Unit(pygame.sprite.Sprite):
 
-	def __init__(self, entity):
+	def __init__(self, entity, birdtype):
 		pygame.sprite.Sprite.__init__(self) #call Sprite initializer
 		
 		self.entity = entity
 		init_position = self.entity.get_rect().center
-
-		self.image0, self.rect0 = load_image('birdie.png')
+		
+		png_name = ''
+		if birdtype == 'predator':
+			png_name = 'eagle.png'
+		else:
+			png_name = 'birdie.png'
+		
+		self.image0, self.rect0 = load_image(png_name)			
 		self.image = self.image0
+		
 		self.rect = self.rect0.move(init_position)
 
 		screen = pygame.display.get_surface()
@@ -39,7 +46,6 @@ class Unit(pygame.sprite.Sprite):
 
 	def do_yaw(self, rect, velocity):	
 		angle = math.atan2(velocity[1], velocity[0])
-		print str(math.degrees(angle))
 		oldcent = rect.center
 		newsurf = pygame.transform.rotate(self.image0, 270-math.degrees(angle))
 		newrect = newsurf.get_rect()
