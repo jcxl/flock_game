@@ -17,9 +17,28 @@ class TestBird(unittest.TestCase):
         b1 = bird.Bird((0, 0), (0, 1), 0)
         b2 = bird.Bird((0, -5), (0, 0), 1)
         b3 = bird.Bird((-2, -2), (0, 0), 2)
-
+        
         b_list = [b2, b3]
         in_angle = b1.birds_in_angle(b_list)
         self.assertEquals(in_angle[0].bird_id, 2)
         self.assertEquals(len(in_angle), 1)
 
+    def test_in_angle_2(self):
+        b1 = bird.Bird((0, 0), (-1, -1), 0)
+        b2 = bird.Bird((5, 5), (0, 0), 1)
+        b3 = bird.Bird((-2, -2), (0, 0), 2)
+    
+        b_list = [b2, b3]
+        in_angle = b1.birds_in_angle(b_list)
+        self.assertEquals(in_angle[0].bird_id, 2)
+        self.assertEquals(len(in_angle), 1)
+
+    def test_in_angle_3(self):
+        b1 = bird.Bird((0, 0), (-1, 0), 0)
+        b2 = bird.Bird((5, 0), (0, 0), 1)
+        b3 = bird.Bird((0, 0), (0, 0), 2)
+    
+        b_list = [b2, b3]
+        in_angle = b1.birds_in_angle(b_list)
+        self.assertEquals(in_angle[0].bird_id, 2)
+        self.assertEquals(len(in_angle), 1)
