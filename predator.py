@@ -1,9 +1,10 @@
 import pygame
 import math
+import util
 
 class Predator():
 
-    def __init__(self, position, velocity, predator_id):
+    def __init__(self, position, velocity, prey_id, config = None):
         self.MAX_ACCELERATION = 1
         self.MAX_TURN_RATE = 1
         self.MAX_SPEED = 1
@@ -14,8 +15,12 @@ class Predator():
         
         self.position = position
         self.velocity = velocity
-        self.predator_id = predator_id
+        self.prey_id = prey_id
 
+        if config == None:
+            config = {"size" : (800, 600)}
+        
+        self.config = config
     def get_rect(self):
         return pygame.Rect(self.position[0],self.position[1],8,8)
 

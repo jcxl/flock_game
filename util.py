@@ -1,6 +1,7 @@
 import random
 import prey
 import math
+import predator
 
 def random_position(config):
     max_size = config["size"]
@@ -12,7 +13,7 @@ def populate_prey(l, config):
         b = prey.Prey(random_position(config), (random.randint(0, 5), random.randint(0, 5)), x, config)
         l.append(b)
 
-def populate_predators(l, config):
+def populate_predator(l, config):
     for x in range(config["num_predators"]):
         b = predator.Predator(random_position(config), (random.randint(0, 5), random.randint(0, 5)), x, config)
         l.append(b)
