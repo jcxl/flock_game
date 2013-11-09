@@ -33,7 +33,7 @@ while not done:
         gfxdraw.box(screen, rect, color.THECOLORS['white'])
     for p in predator_list:
         p.tick(prey_list, predator_list)
-        rect = b.get_rect()
+        rect = p.get_rect()
         gfxdraw.box(screen, rect, color.THECOLORS['red'])
 
     pygame.display.update()

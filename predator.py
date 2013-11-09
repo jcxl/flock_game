@@ -7,12 +7,10 @@ class Predator():
     def __init__(self, position, velocity, prey_id, config = None):
         self.MAX_ACCELERATION = 1
         self.MAX_TURN_RATE = 1
-        self.MAX_SPEED = 1
-        
-        self.PREY_POS_WEIGHT = 1.0
+        self.MAX_SPEED = 4        
+        self.PREY_POS_WEIGHT = 100.0
         self.PREY_VEL_WEIGHT = 1.0
-        
-        
+    
         self.position = position
         self.velocity = velocity
         self.prey_id = prey_id
