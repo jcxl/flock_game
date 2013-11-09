@@ -24,6 +24,7 @@ class Prey():
 
         if config == None:
             config = {"size": (800, 600)}
+        
         self.config = config
         
     def __str__(self):
@@ -173,15 +174,15 @@ class Prey():
 
         if self.position[0] < 100:
             x_comp = ((100.0 / self.position[0]) - 1)
-        elif self.position[0] + 100 > self.config['size'][0]:
+        elif self.position[0] > self.config['size'][0]:
             x_comp = ((100.0 / self.config['size'][0] - self.position[0]) - 1)
 
         if self.position[1] < 100:
             y_comp = ((100.0 / self.position[1]) - 1)
-        elif self.position[1] + 100 > self.config['size'][1]:
+        elif self.position[1] > self.config['size'][1]:
             y_comp = ((100.0 / self.config['size'][1] - self.position[1]) - 1)
 
-        return (x_comp, y_comp)
+        return (x_comp, y_comp) 
 
     def sum_sensors(self, prey_list, predator_list):
         vectors = []

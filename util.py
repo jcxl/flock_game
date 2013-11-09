@@ -9,7 +9,7 @@ def random_position(config):
 
 def populate(l, config):
     for x in range(config["num_birds"]):
-        b = prey.Prey(random_position(config), (random.randint(0, 5), random.randint(0, 5)), x, config)
+        b = prey.Prey(random_position(config), (random.randint(1, 5), random.randint(1, 5)), x, config)
         l.append(b)
 
 def multiply_vector(vector, scalar):
