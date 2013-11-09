@@ -3,6 +3,8 @@ from pygame import gfxdraw
 import util
 import config
 
+import unit
+
 from pygame import locals
 from pygame import color
 
@@ -17,20 +19,28 @@ pygame.init()
 screen = pygame.display.set_mode(config["size"])
 pygame.display.set_caption("Flocking")
 
-screen.fill(color.THECOLORS['black'])
+screen.fill(color.THECOLORS['lightslategray'])
 
 clock = pygame.time.Clock()
 
-done = False
+prey_sprites = pygame.sprite.RenderPlain()
+for b in prey_list:
+	new_sprite = unit.Unit(b)
+	prey_sprites.add(new_sprite)
 
+done = False
 while not done:
     dt = clock.tick(config["FPS"])
-    screen.fill(color.THECOLORS['black'])
+	
+    screen.fill(color.THECOLORS['lightslategray'])
+	
+    prey_sprites.update()
+    prey_sprites.draw(screen)
 
     for b in prey_list:
         b.tick(prey_list, predator_list)
         rect = b.get_rect()
-        gfxdraw.box(screen, rect, color.THECOLORS['white'])
+
     for p in predator_list:
         p.tick(prey_list, predator_list)
         rect = p.get_rect()
