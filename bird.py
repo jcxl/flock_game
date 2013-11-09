@@ -17,7 +17,10 @@ class Bird():
         self.bird_id = bird_id
 
     def __str__(self):
-        return self.bird_id
+        return str(self.bird_id)
+
+    def __repr__(self):
+        return str(self.bird_id)
 
     def get_rect(self):
         return pygame.Rect(self.position[0], self.position[1],
