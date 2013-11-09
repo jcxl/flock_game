@@ -18,10 +18,10 @@ class Bird():
 
         
     def __str__(self):
-        return str(self.bird_id)
+        return "id: {} pos: ({}, {})".format(self.bird_id, self.position[0], self.position[1])
 
     def __repr__(self):
-        return str(self.bird_id)
+        return "id: {} pos: ({}, {})".format(self.bird_id, self.position[0], self.position[1])
 
     def get_rect(self):
         return pygame.Rect(self.position[0], self.position[1],
@@ -34,10 +34,10 @@ class Bird():
         return (x_comp**2 + y_comp**2)
     
     def diff_pos_x(self, b):
-        return self.position[0] - b.position[0]
+        return b.position[0] - self.position[0]
 
     def diff_pos_y(self, b):
-        return self.position[1] - b.position[1]
+        return b.position[1] - self.position[1]
 
     def birds_in_range(self, bird_list, perception_limit):
         pl_squared = perception_limit**2
@@ -62,9 +62,11 @@ class Bird():
         for b in bird_list:
             x = self.diff_pos_x(b)
             y = self.diff_pos_y(b)
-            b_angle = math.atan2(x,y)
-            
-            if  math.fabs(b_angle - self.heading()) < math.radians(self.VISION_ANGLE):
+            b_angle = math.atan2(y, x)
+            theta = math.fabs(b_angle - self.heading())
+            if theta > math.pi:
+                theta -= math.pi
+            if theta < math.radians(self.VISION_ANGLE):
                 in_angle.append(b)
             
         return in_angle
