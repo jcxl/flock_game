@@ -1,27 +1,27 @@
 import pygame
 import math
 
-class Bird():
+class Prey():
 
-    def __init__(self, position, velocity, bird_id):
+    def __init__(self, position, velocity, prey_id):
         self.MAX_ACCELERATION = 1
         self.MAX_TURN_RATE = 1
         self.MAX_SPEED = 1
 
-        self.PERCEPTION_LIMIT = 1
-        self.TOO_CLOSE = 1
+        self.PERCEPTION_LIMIT = 100
+        self.TOO_CLOSE = 10
         self.VISION_ANGLE = 160
 
         self.position = position
         self.velocity = velocity
-        self.bird_id = bird_id
+        self.prey_id = prey_id
 
         
     def __str__(self):
-        return "id: {} pos: ({}, {})".format(self.bird_id, self.position[0], self.position[1])
+        return "id: {} pos: ({}, {})".format(self.prey_id, self.position[0], self.position[1])
 
     def __repr__(self):
-        return "id: {} pos: ({}, {})".format(self.bird_id, self.position[0], self.position[1])
+        return "id: {} pos: ({}, {})".format(self.prey_id, self.position[0], self.position[1])
 
     def get_rect(self):
         return pygame.Rect(self.position[0], self.position[1],
@@ -39,12 +39,12 @@ class Bird():
     def diff_pos_y(self, b):
         return b.position[1] - self.position[1]
 
-    def birds_in_range(self, bird_list, perception_limit):
+    def prey_in_range(self, prey_list, perception_limit):
         pl_squared = perception_limit**2
         in_range = []
 
-        for b in bird_list:
-            if (self.bird_id == b.bird_id):
+        for b in prey_list:
+            if (self.prey_id == b.prey_id):
                 continue
 
             distance_sqrd = self.distance_squared(b.position, self.position)
@@ -56,10 +56,10 @@ class Bird():
     def heading(self):
         return math.atan2(self.velocity[1], self.velocity[0])
 
-    def birds_in_angle(self, bird_list):
+    def prey_in_angle(self, prey_list):
         in_angle = []
         
-        for b in bird_list:
+        for b in prey_list:
             x = self.diff_pos_x(b)
             y = self.diff_pos_y(b)
 
@@ -76,43 +76,51 @@ class Bird():
             
         return in_angle
 
-    def birds_in_view(self, bird_list):
-        birds_in_range = self.birds_in_range(bird_list, self.PERCEPTION_LIMIT)
-        birds_in_view = self.birds_in_angle(birds_in_range)
+    def prey_in_view(self, prey_list):
+        prey_in_range = self.prey_in_range(prey_list, self.PERCEPTION_LIMIT)
+        prey_in_view = self.prey_in_angle(prey_in_range)
 
-        return birds_in_view
+        return prey_in_view
 
-    def cohesion_sensor(self, birds_in_view):
+    def cohesion_vector(self, prey_list):
+        prey_in_view = self.prey_in_view(prey_list)
+        return self.cohesion_sensor(prey_in_view)
+
+    def cohesion_sensor(self, prey_in_view):
         x_comp = 0
         y_comp = 0
 
-        for b in birds_in_view:
+        for b in prey_in_view:
             x_comp += self.diff_pos_x(b)
             y_comp += self.diff_pos_y(b)
 
-        x_comp = (x_comp * 1.0) / len(birds_in_view)
-        y_comp = (y_comp * 1.0) / len(birds_in_view)
+        x_comp = (x_comp * 1.0) / len(prey_in_view)
+        y_comp = (y_comp * 1.0) / len(prey_in_view)
 
         return (x_comp, y_comp)
 
-    def velocity_sensor(self, birds_in_view):
+    def follow_vector(self, prey_list):
+        prey_in_view = self.prey_in_view(prey_list)
+        return self.velocity_sensor(prey_in_view)
+
+    def velocity_sensor(self, prey_in_view):
         x_comp = 0
         y_comp = 0
 
-        for b in birds_in_view:
+        for b in prey_in_view:
             x_comp += b.velocity[0]
             y_comp += b.velocity[1]
 
-        x_comp = (x_comp * 1.0) / len(birds_in_view)
-        y_comp = (y_comp * 1.0) / len(birds_in_view)
+        x_comp = (x_comp * 1.0) / len(prey_in_view)
+        y_comp = (y_comp * 1.0) / len(prey_in_view)
 
         return (x_comp, y_comp)
 
-    def separation_sensor(self, birds_in_range):
+    def separation_sensor(self, prey_in_range):
         x_comp = 0
         y_comp = 0
 
-        for b in birds_in_range:
+        for b in prey_in_range:
             dist = math.sqrt(self.distance_squared(self.position, b.position))
             ratio = self.TOO_CLOSE / dist
 
@@ -124,7 +132,7 @@ class Bird():
             x_comp += (ratio - 1) * unit_vector[0]
             y_comp += (ratio - 1) * unit_vector[1]
 
-        x_comp = x_comp / len(birds_in_range)
-        y_comp = y_comp / len(birds_in_range)
+        x_comp = x_comp / len(prey_in_range)
+        y_comp = y_comp / len(prey_in_range)
 
         return (x_comp, y_comp)
