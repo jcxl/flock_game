@@ -63,7 +63,7 @@ class TestPrey(unittest.TestCase):
         b_list = [b1, b2, b3]
 
         vector = b1.follow_vector(b_list)        
-        self.assertEquals((0.0, 2.0), (0.0, 2.0))
+        self.assertEquals((0.0, 2.0), vector)
 
     def test_separation(self):
 

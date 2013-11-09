@@ -12,6 +12,11 @@ class Prey():
         self.TOO_CLOSE = 10
         self.VISION_ANGLE = 160
 
+        self.COHESION_WEIGHT = 1.0
+        self.FOLLOW_WEIGHT = 1.0
+        self.SEPARATION_WEIGHT = 1.0
+        self.PREDATOR_WEIGHT = 1.0
+
         self.position = position
         self.velocity = velocity
         self.prey_id = prey_id
@@ -87,6 +92,10 @@ class Prey():
         return self.cohesion_sensor(entities_in_view)
 
     def cohesion_sensor(self, entities_in_view):
+
+        if len(entities_in_view) == 0:
+            return (0.0, 0.0)
+
         x_comp = 0
         y_comp = 0
 
@@ -104,6 +113,10 @@ class Prey():
         return self.velocity_sensor(entities_in_view)
 
     def velocity_sensor(self, entities_in_view):
+
+        if len(entities_in_view) == 0:
+            return (0.0, 0.0)
+
         x_comp = 0
         y_comp = 0
 
@@ -126,6 +139,10 @@ class Prey():
         return self.generic_repulsion_sensor(predators_in_view, self.PERCEPTION_LIMIT)
 
     def generic_repulsion_sensor(self, entity_list, radius):
+
+        if len(entity_list) == 0:
+            return (0.0, 0.0)
+
         x_comp = 0
         y_comp = 0
 
