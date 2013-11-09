@@ -8,7 +8,7 @@ class Predator():
         self.MAX_ACCELERATION = 1
         self.MAX_TURN_RATE = 1
         self.MAX_SPEED = 4        
-        self.PREY_POS_WEIGHT = 100.0
+        self.PREY_POS_WEIGHT = 100
         self.PREY_VEL_WEIGHT = 1.0
     
         self.position = position
@@ -44,7 +44,14 @@ class Predator():
         return prey
 
     def get_closest_prey_position(self, prey_list):
-        return self.detect_closest_prey(prey_list).position
+        closest_prey = self.detect_closest_prey(prey_list)
+
+        rel_pos = [0, 0]
+
+        rel_pos[0] = self.position[0] - closest_prey.position[0]
+        rel_pos[1] = self.position[1] - closest_prey.position[1]
+
+        return rel_pos
 
     def get_closest_prey_velocity(self, prey_list):
         return self.detect_closest_prey(prey_list).velocity
@@ -74,7 +81,13 @@ class Predator():
         prey_vel_vector = self.get_closest_prey_velocity(prey_list)
         vectors.append(util.multiply_vector(prey_vel_vector, self.PREY_VEL_WEIGHT))
 
-        vectors.append(self.edge_repulsion_sensor())
+        vectors.append(util.multiply_vector(self.edge_repulsion_sensor(), 100))
+
+        print vectors
+
+        print """Prey_Pos: {}
+        Prey_Vel: {}
+        Repulsion: {}""".format(*vectors)
 
         x_comp = 0
         y_comp = 0
