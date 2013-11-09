@@ -39,7 +39,7 @@ class Prey():
     def diff_pos_y(self, b):
         return b.position[1] - self.position[1]
 
-    def prey_in_range(self, prey_list, perception_limit):
+    def entities_in_range(self, prey_list, perception_limit):
         pl_squared = perception_limit**2
         in_range = []
 
@@ -56,7 +56,7 @@ class Prey():
     def heading(self):
         return math.atan2(self.velocity[1], self.velocity[0])
 
-    def prey_in_angle(self, prey_list):
+    def entities_in_angle(self, prey_list):
         in_angle = []
         
         for b in prey_list:
@@ -76,68 +76,72 @@ class Prey():
             
         return in_angle
 
-    def prey_in_view(self, prey_list):
-        prey_in_range = self.prey_in_range(prey_list, self.PERCEPTION_LIMIT)
-        prey_in_view = self.prey_in_angle(prey_in_range)
+    def entities_in_view(self, prey_list):
+        entities_in_range = self.entities_in_range(prey_list, self.PERCEPTION_LIMIT)
+        entities_in_view = self.entities_in_angle(entities_in_range)
 
-        return prey_in_view
+        return entities_in_view
 
     def cohesion_vector(self, prey_list):
-        prey_in_view = self.prey_in_view(prey_list)
-        return self.cohesion_sensor(prey_in_view)
+        entities_in_view = self.entities_in_view(prey_list)
+        return self.cohesion_sensor(entities_in_view)
 
-    def cohesion_sensor(self, prey_in_view):
+    def cohesion_sensor(self, entities_in_view):
         x_comp = 0
         y_comp = 0
 
-        for b in prey_in_view:
+        for b in entities_in_view:
             x_comp += self.diff_pos_x(b)
             y_comp += self.diff_pos_y(b)
 
-        x_comp = (x_comp * 1.0) / len(prey_in_view)
-        y_comp = (y_comp * 1.0) / len(prey_in_view)
+        x_comp = (x_comp * 1.0) / len(entities_in_view)
+        y_comp = (y_comp * 1.0) / len(entities_in_view)
 
         return (x_comp, y_comp)
 
     def follow_vector(self, prey_list):
-        prey_in_view = self.prey_in_view(prey_list)
-        return self.velocity_sensor(prey_in_view)
+        entities_in_view = self.entities_in_view(prey_list)
+        return self.velocity_sensor(entities_in_view)
 
-    def velocity_sensor(self, prey_in_view):
+    def velocity_sensor(self, entities_in_view):
         x_comp = 0
         y_comp = 0
 
-        for b in prey_in_view:
+        for b in entities_in_view:
             x_comp += b.velocity[0]
             y_comp += b.velocity[1]
 
-        x_comp = (x_comp * 1.0) / len(prey_in_view)
-        y_comp = (y_comp * 1.0) / len(prey_in_view)
+        x_comp = (x_comp * 1.0) / len(entities_in_view)
+        y_comp = (y_comp * 1.0) / len(entities_in_view)
 
         return (x_comp, y_comp)
 
     def separation_vector(self, prey_list):
-        prey_too_close = self.prey_in_range(prey_list, self.TOO_CLOSE)
-        prey_in_view = self.prey_in_view(prey_too_close)
-        return self.separation_sensor(prey_in_view)
+        prey_too_close = self.entities_in_range(prey_list, self.TOO_CLOSE)
+        entities_in_view = self.entities_in_view(prey_too_close)
+        return self.generic_repulsion_sensor(entities_in_view, self.TOO_CLOSE)
 
-    def separation_sensor(self, prey_in_range):
+    def prey_vector(self, predator_list):
+        predators_in_view = self.entities_in_view(predator_list)
+        return self.generic_repulsion_sensor(predators_in_view, self.PERCEPTION_LIMIT)
+
+    def generic_repulsion_sensor(self, entity_list, radius):
         x_comp = 0
         y_comp = 0
 
-        for b in prey_in_range:
-            dist = math.sqrt(self.distance_squared(self.position, b.position))
-            ratio = self.TOO_CLOSE / dist
+        for e in entity_list:
+            dist = math.sqrt(self.distance_squared(self.position, e.position))
+            ratio = radius / dist
 
-            diff_pos_x = self.position[0] - b.position[0]
-            diff_pos_y = self.position[1] - b.position[1]
+            diff_pos_x = self.position[0] - e.position[0]
+            diff_pos_y = self.position[1] - e.position[1]
 
             unit_vector = (diff_pos_x / dist, diff_pos_y / dist)
 
             x_comp += (ratio - 1) * unit_vector[0]
             y_comp += (ratio - 1) * unit_vector[1]
 
-        x_comp = x_comp / len(prey_in_range)
-        y_comp = y_comp / len(prey_in_range)
+        x_comp = x_comp / len(entity_list)
+        y_comp = y_comp / len(entity_list)
 
         return (x_comp, y_comp)
