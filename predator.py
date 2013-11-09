@@ -48,8 +48,8 @@ class Predator():
 
         rel_pos = [0, 0]
 
-        rel_pos[0] = self.position[0] - closest_prey.position[0]
-        rel_pos[1] = self.position[1] - closest_prey.position[1]
+        rel_pos[0] = closest_prey.position[0] - self.position[0] 
+        rel_pos[1] = closest_prey.position[0] - self.position[0] 
 
         return rel_pos
 
