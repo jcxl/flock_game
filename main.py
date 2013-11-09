@@ -17,7 +17,7 @@ util.populate_predator(predator_list,config)
 
 pygame.init()
 screen = pygame.display.set_mode(config["size"])
-pygame.display.set_caption("Flocking")
+pygame.display.set_caption("The Birds")
 
 screen.fill(color.THECOLORS['lightslategray'])
 
@@ -25,8 +25,13 @@ clock = pygame.time.Clock()
 
 prey_sprites = pygame.sprite.RenderPlain()
 for b in prey_list:
-	new_sprite = unit.Unit(b)
+	new_sprite = unit.Unit(b, 'prey')
 	prey_sprites.add(new_sprite)
+
+predator_sprites = pygame.sprite.RenderPlain()
+for p in predator_list:
+    new_sprite = unit.Unit(p, 'predator')
+    predator_sprites.add(new_sprite)
 
 done = False
 while not done:
@@ -36,6 +41,9 @@ while not done:
 	
     prey_sprites.update()
     prey_sprites.draw(screen)
+
+    predator_sprites.update()
+    predator_sprites.draw(screen)
 
     for b in prey_list:
         b.tick(prey_list, predator_list)
