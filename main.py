@@ -1,18 +1,15 @@
 import pygame
 from pygame import gfxdraw
-import random
 import util
-import bird
+import config
 
 from pygame import locals
 from pygame import color
 
-config = {"size": (800, 600),
-    "num_birds": 10,
-    "FPS": 60}
+config = config.config;
 
-bird_list = []
-util.populate(bird_list, config)
+prey_list = []
+util.populate(prey_list, config)
 
 pygame.init()
 screen = pygame.display.set_mode(config["size"])
@@ -28,7 +25,8 @@ while not done:
     dt = clock.tick(config["FPS"])
     screen.fill(color.THECOLORS['black'])
 
-    for b in bird_list:
+    for b in prey_list:
+        b.tick(prey_list, [])
         rect = b.get_rect()
         gfxdraw.box(screen, rect, color.THECOLORS['white'])
 

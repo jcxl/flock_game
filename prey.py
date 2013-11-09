@@ -4,24 +4,27 @@ import math
 
 class Prey():
 
-    def __init__(self, position, velocity, prey_id):
+    def __init__(self, position, velocity, prey_id, config=None):
         self.MAX_ACCELERATION = 1
         self.MAX_TURN_RATE = 1
-        self.MAX_SPEED = 1
+        self.MAX_SPEED = 5
 
-        self.PERCEPTION_LIMIT = 100
-        self.TOO_CLOSE = 10
+        self.PERCEPTION_LIMIT = 200
+        self.TOO_CLOSE = 50
         self.VISION_ANGLE = 160
 
         self.COHESION_WEIGHT = 1.0
-        self.FOLLOW_WEIGHT = 1.0
-        self.SEPARATION_WEIGHT = 1.0
+        self.FOLLOW_WEIGHT = 5
+        self.SEPARATION_WEIGHT = 100
         self.PREDATOR_WEIGHT = 1.0
 
         self.position = position
         self.velocity = velocity
         self.prey_id = prey_id
 
+        if config == None:
+            config = {"size": (800, 600)}
+        self.config = config
         
     def __str__(self):
         return "id: {} pos: ({}, {})".format(self.prey_id, self.position[0], self.position[1])
@@ -164,6 +167,22 @@ class Prey():
 
         return (x_comp, y_comp)
 
+    def edge_repulsion_sensor(self):
+        x_comp = 0
+        y_comp = 0
+
+        if self.position[0] < 100:
+            x_comp = ((100.0 / self.position[0]) - 1)
+        elif self.position[0] + 100 > self.config['size'][0]:
+            x_comp = ((100.0 / self.config['size'][0] - self.position[0]) - 1)
+
+        if self.position[1] < 100:
+            y_comp = ((100.0 / self.position[1]) - 1)
+        elif self.position[1] + 100 > self.config['size'][1]:
+            y_comp = ((100.0 / self.config['size'][1] - self.position[1]) - 1)
+
+        return (x_comp, y_comp)
+
     def sum_sensors(self, prey_list, predator_list):
         vectors = []
 
@@ -179,6 +198,8 @@ class Prey():
         predator_vector = self.predator_vector(predator_list)
         vectors.append(util.multiply_vector(predator_vector, self.PREDATOR_WEIGHT))
 
+        vectors.append(self.edge_repulsion_sensor())
+
         x_comp = 0
         y_comp = 0
 
@@ -186,4 +207,24 @@ class Prey():
             x_comp += x
             y_comp += y
 
+        vector_magnitude = util.vector_magnitude((x_comp, y_comp))
+
+        if vector_magnitude > self.MAX_SPEED:
+            x_comp /= vector_magnitude
+            y_comp /= vector_magnitude
+
+            x_comp *= self.MAX_SPEED
+            y_comp *= self.MAX_SPEED
+
         return (x_comp, y_comp)
+
+    def tick(self, prey_list, predator_list):
+        vector_sum = self.sum_sensors(prey_list, predator_list)
+        self.velocity = vector_sum
+
+        new_pos = (self.position[0] + self.velocity[0],
+            self.position[1] + self.velocity[1])
+        self.position = new_pos
+
+
+        

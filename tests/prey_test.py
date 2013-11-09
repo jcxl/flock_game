@@ -74,4 +74,4 @@ class TestPrey(unittest.TestCase):
         b_list = [b1, b2, b3]
 
         vector = b1.separation_vector(b_list)
-        self.assertEquals((0.0, -4.292893218813452), vector)
+        self.assertEquals((0.0, -24.292893218813447), vector)
