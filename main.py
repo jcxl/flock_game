@@ -9,7 +9,9 @@ from pygame import color
 config = config.config;
 
 prey_list = []
-util.populate(prey_list, config)
+predator_list = []
+util.populate_prey(prey_list, config)
+util.populate_predator(predator_list,config)
 
 pygame.init()
 screen = pygame.display.set_mode(config["size"])
@@ -26,7 +28,7 @@ while not done:
     screen.fill(color.THECOLORS['black'])
 
     for b in prey_list:
-        b.tick(prey_list, [])
+        b.tick(prey_list, predator_list)
         rect = b.get_rect()
         gfxdraw.box(screen, rect, color.THECOLORS['white'])
 

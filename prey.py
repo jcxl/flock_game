@@ -2,6 +2,7 @@ import pygame
 import util
 import math
 
+
 class Prey():
 
     def __init__(self, position, velocity, prey_id, config=None):
@@ -15,7 +16,7 @@ class Prey():
 
         self.COHESION_WEIGHT = 1.0
         self.FOLLOW_WEIGHT = 5
-        self.SEPARATION_WEIGHT = 100
+        self.SEPARATION_WEIGHT = 80
         self.PREDATOR_WEIGHT = 1.0
 
         self.position = position
