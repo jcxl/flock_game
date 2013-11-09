@@ -62,6 +62,11 @@ class Bird():
         for b in bird_list:
             x = self.diff_pos_x(b)
             y = self.diff_pos_y(b)
+
+            if (x == 0 and y == 0):
+                in_angle.append(b)
+                continue
+
             b_angle = math.atan2(y, x)
             theta = math.fabs(b_angle - self.heading())
             if theta > math.pi:
