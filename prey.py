@@ -220,8 +220,27 @@ class Prey():
 
     def tick(self, prey_list, predator_list):
         vector_sum = self.sum_sensors(prey_list, predator_list)
-        self.velocity = vector_sum
+        new_velocity = [0, 0]
+        if vector_sum[0] > self.velocity[0] and vector_sum[0] - self.velocity[0] > self.MAX_ACCELERATION:
+            new_velocity[0] = self.velocity[0] + self.MAX_ACCELERATION
+        elif vector_sum[0] > self.velocity[0] and vector_sum[0] - self.velocity[0] < self.MAX_ACCELERATION:
+            new_velocity[0] = self.velocity[0] + vector_sum[0] - self.velocity[0]
+        elif vector_sum[0] < self.velocity[0] and self.velocity[0] - vector_sum[0] > self.MAX_ACCELERATION:
+            new_velocity[0] = self.velocity[0] - self.MAX_ACCELERATION
+        elif vector_sum[0] > self.velocity[0] and vector_sum[0] - self.velocity[0] < self.MAX_ACCELERATION:
+            new_velocity[0] = self.velocity[0] - self.velociy[0] - vector_sum[0]
 
+        if vector_sum[1] > self.velocity[1] and vector_sum[1] - self.velocity[1] > self.MAX_ACCELERATION:
+            new_velocity[1] = self.velocity[1] + self.MAX_ACCELERATION
+        elif vector_sum[1] > self.velocity[1] and vector_sum[1] - self.velocity[1] < self.MAX_ACCELERATION:
+            new_velocity[1] = self.velocity[1] + vector_sum[1] - self.velocity[1]
+        elif vector_sum[1] < self.velocity[1] and self.velocity[1] - vector_sum[1] > self.MAX_ACCELERATION:
+            new_velocity[1] = self.velocity[1] - self.MAX_ACCELERATION
+        elif vector_sum[1] > self.velocity[1] and vector_sum[1] - self.velocity[1] < self.MAX_ACCELERATION:
+            new_velocity[1] = self.velocity[1] - self.velociy[1] - vector_sum[1]
+
+
+        self.velocity= new_velocity
         new_pos = (self.position[0] + self.velocity[0],
             self.position[1] + self.velocity[1])
         self.position = new_pos
