@@ -64,3 +64,14 @@ class TestPrey(unittest.TestCase):
 
         vector = b1.follow_vector(b_list)        
         self.assertEquals((0.0, 2.0), (0.0, 2.0))
+
+    def test_separation(self):
+
+        b1 = prey.Prey((0, 0), (0, 1), 0)
+        b2 = prey.Prey((1, 1), (1, 2), 1)
+        b3 = prey.Prey((-1, 1), (-1, 2), 2)
+
+        b_list = [b1, b2, b3]
+
+        vector = b1.separation_vector(b_list)
+        self.assertEquals((0.0, -4.292893218813452), vector)

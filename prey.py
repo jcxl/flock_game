@@ -116,6 +116,11 @@ class Prey():
 
         return (x_comp, y_comp)
 
+    def separation_vector(self, prey_list):
+        prey_too_close = self.prey_in_range(prey_list, self.TOO_CLOSE)
+        prey_in_view = self.prey_in_view(prey_too_close)
+        return self.separation_sensor(prey_in_view)
+
     def separation_sensor(self, prey_in_range):
         x_comp = 0
         y_comp = 0
@@ -124,8 +129,8 @@ class Prey():
             dist = math.sqrt(self.distance_squared(self.position, b.position))
             ratio = self.TOO_CLOSE / dist
 
-            diff_pos_x = b.position[0] - self.position[0]
-            diff_pos_y = b.position[1] - self.poisiton[1]
+            diff_pos_x = self.position[0] - b.position[0]
+            diff_pos_y = self.position[1] - b.position[1]
 
             unit_vector = (diff_pos_x / dist, diff_pos_y / dist)
 
