@@ -52,7 +52,6 @@ while not done:
     for p in predator_list:
         p.tick(prey_list, predator_list)
         rect = p.get_rect()
-        gfxdraw.box(screen, rect, color.THECOLORS['red'])
 
     pygame.display.update()
     events = pygame.event.get()
