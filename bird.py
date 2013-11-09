@@ -89,4 +89,37 @@ class Bird():
         y_comp = (y_comp * 1.0) / len(birds_in_view)
 
         return (x_comp, y_comp)
-        
+
+    def velocity_sensor(self, birds_in_view):
+        x_comp = 0
+        y_comp = 0
+
+        for b in birds_in_view:
+            x_comp += b.velocity[0]
+            y_comp += b.velocity[1]
+
+        x_comp = (x_comp * 1.0) / len(birds_in_view)
+        y_comp = (y_comp * 1.0) / len(birds_in_view)
+
+        return (x_comp, y_comp)
+
+    def separation_sensor(self, birds_in_range):
+        x_comp = 0
+        y_comp = 0
+
+        for b in birds_in_range:
+            dist = math.sqrt(self.distance_squared(self.position, b.position))
+            ratio = self.TOO_CLOSE / dist
+
+            diff_pos_x = b.position[0] - self.position[0]
+            diff_pos_y = b.position[1] - self.poisiton[1]
+
+            unit_vector = (diff_pos_x / dist, diff_pos_y / dist)
+
+            x_comp += (ratio - 1) * unit_vector[0]
+            y_comp += (ratio - 1) * unit_vector[1]
+
+        x_comp = x_comp / len(birds_in_range)
+        y_comp = y_comp / len(birds_in_range)
+
+        return (x_comp, y_comp)
