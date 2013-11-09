@@ -1,4 +1,5 @@
 import pygame
+import util
 import math
 
 class Prey():
@@ -134,7 +135,7 @@ class Prey():
         entities_in_view = self.entities_in_view(prey_too_close)
         return self.generic_repulsion_sensor(entities_in_view, self.TOO_CLOSE)
 
-    def prey_vector(self, predator_list):
+    def predator_vector(self, predator_list):
         predators_in_view = self.entities_in_view(predator_list)
         return self.generic_repulsion_sensor(predators_in_view, self.PERCEPTION_LIMIT)
 
@@ -160,5 +161,29 @@ class Prey():
 
         x_comp = x_comp / len(entity_list)
         y_comp = y_comp / len(entity_list)
+
+        return (x_comp, y_comp)
+
+    def sum_sensors(self, prey_list, predator_list):
+        vectors = []
+
+        cohesion_vector = self.cohesion_vector(prey_list)
+        vectors.append(util.multiply_vector(cohesion_vector, self.COHESION_WEIGHT))
+
+        follow_vector = self.follow_vector(prey_list)
+        vectors.append(util.multiply_vector(follow_vector, self.FOLLOW_WEIGHT))
+
+        separation_vector = self.separation_vector(prey_list)
+        vectors.append(util.multiply_vector(separation_vector, self.SEPARATION_WEIGHT))
+
+        predator_vector = self.predator_vector(predator_list)
+        vectors.append(util.multiply_vector(predator_vector, self.PREDATOR_WEIGHT))
+
+        x_comp = 0
+        y_comp = 0
+
+        for x, y in vectors:
+            x_comp += x
+            y_comp += y
 
         return (x_comp, y_comp)
