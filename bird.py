@@ -71,16 +71,22 @@ class Bird():
             
         return in_angle
 
-    def cohesion_sensor(self, bird_list):
-        a_sensor = (0,0)
+    def birds_in_view(self, bird_list):
+        birds_in_range = self.birds_in_range(bird_list, self.PERCEPTION_LIMIT)
+        birds_in_view = self.birds_in_angle(birds_in_range)
+
+        return birds_in_view
+
+    def cohesion_sensor(self, birds_in_view):
         x_comp = 0
         y_comp = 0
 
-        if len(bird_list) > 0:
-            for b in bird_list:
-                x_comp += self.diff_pos_x(b)
-                y_comp += self.diff_pos_y(b)
-            x_comp = x_comp/len(bird_list)
-            y_comp = y_comp/len(bird_list)
+        for b in birds_in_view:
+            x_comp += self.diff_pos_x(b)
+            y_comp += self.diff_pos_y(b)
 
-        return (x_comp,y_comp)
+        x_comp = (x_comp * 1.0) / len(birds_in_view)
+        y_comp = (y_comp * 1.0) / len(birds_in_view)
+
+        return (x_comp, y_comp)
+        
